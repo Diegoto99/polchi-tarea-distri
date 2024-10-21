@@ -25,4 +25,17 @@ public class PersonaService {
         return repository.save(p);
     }
 
+
+    public Persona buscarPorCedula(Integer cedula) {
+        return repository.findById(cedula).orElse(null);
+    }
+    
+    public Persona actualizar(Persona p) {
+        return repository.save(p);
+    }
+    
+    public void borrar(Integer cedula) {
+        repository.deleteById(cedula);
+    }
+    
 }

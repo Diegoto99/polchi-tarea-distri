@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,6 +67,38 @@ public class PersonaController {
 
         
     }
+
+
+	@PutMapping(value = "/actualizar/{cedula}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> actualizar(@PathVariable("cedula") Integer cedula, @RequestBody Persona per) {
+
+		Persona personaExistente = personaService.buscarPorCedula(cedula);
+		
+		if (personaExistente == null) {
+			return new ResponseEntity<>("Persona no encontrada", HttpStatus.NOT_FOUND);
+		}
+
+		// Actualizar los campos
+		personaExistente.setNombre(per.getNombre());
+		personaExistente.setApellido(per.getApellido());
+
+		personaService.actualizar(personaExistente);
+		return new ResponseEntity<>("Persona actualizada con éxito", HttpStatus.OK);
+	}
+
+
+	@DeleteMapping(value = "/borrar/{cedula}")
+	public ResponseEntity<String> borrar(@PathVariable("cedula") Integer cedula) {
+
+		Persona personaExistente = personaService.buscarPorCedula(cedula);
+		
+		if (personaExistente == null) {
+			return new ResponseEntity<>("Persona no encontrada", HttpStatus.NOT_FOUND);
+		}
+
+		personaService.borrar(cedula);
+		return new ResponseEntity<>("Persona eliminada con éxito", HttpStatus.OK);
+	}
 
 
 
